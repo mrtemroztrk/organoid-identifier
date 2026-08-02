@@ -1,0 +1,32 @@
+site_name: Organoid Identifier
+site_description: High-performance zero-dependency C-powered Organoid Identifier
+site_author: Murat Emre Öztürk
+
+theme:
+  name: material
+  palette:
+    # Otomatik gece/gündüz modu düğmesi
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.expand
+    - navigation.tabs
+    - content.code.copy
+
+nav:
+  - Home: index.md
+  - API Reference: api.md
+  - Sample Data: sample-data.md
+  - Architecture: architecture.md

@@ -1,45 +1,185 @@
-# Organoid Identifier 
+# Organoid Identifier
 
-[![PyPI version](https://img.shields.io/badge/version-0.4.4-blue.svg)](https://test.pypi.org/project/organoid-identifier/)
+[![PyPI version](https://img.shields.io/badge/version-0.4.5-blue.svg)](https://test.pypi.org/project/organoid-identifier/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-brightgreen.svg)](https://www.python.org/)
 [![Build Status](https://img.shields.io/badge/build-passing-success.svg)](#)
 
-A high-performance, zero-dependency Python library powered by pure C extensions for instant microscopy image inspection and organoid identifier analysis.
+**Organoid Identifier** is a fast and simple Python library that reads and inspects
+microscopy **TIFF files** (like organoid images) without installing any heavy
+dependencies. The heavy lifting is done by a tiny, pure **C** engine, so it works
+instantly on any computer.
+
+> 🧠 **In short:** you give it a TIFF file, it tells you everything about the file —
+> size, dimensions, color space, compression — in a nice readable report.
 
 ---
 
-##  Features
+## Why use it?
 
--  **Ultra Fast:** Core metadata extraction runs natively in pure C at memory level $O(1)$.
--  **Zero Dependencies:** Pure C + Standard Python library. No heavy third-party bloat.
--  **Cross-Platform:** Pre-compiled standalone binary wheels (`manylinux`, `macOS`, `Windows`).
--  **Modular Architecture:** Fully isolated C components ensuring stability and modular extensions.
+| Problem | Solution |
+|---|---|
+| "Which TIFF format is this file?" | `inspect()` tells you in milliseconds |
+| "How big is this image?" | `dimensions()` shows width, height, bit depth |
+| "Is it RGB? Compressed? How many channels?" | `format_info()` answers all of these |
+
+- ⚡ **Fast** — metadata is read natively in C, no image decoding, results in microseconds
+- 🧹 **Zero dependencies** — pure C + standard Python library. Nothing else to install
+- 🖥️ **Cross-platform** — works on Linux, macOS and Windows
+- 📦 **No compilation needed** — pre-built binary wheels are installed by `pip`
 
 ---
 
-##  Installation
+## Installation
 
-Install the pre-compiled binary package directly via `pip`:
+You only need **Python 3.8 or newer**.
+
+### Option 1: From PyPI (recommended)
 
 ```bash
 pip install organoid-identifier
 ```
 
-For more information, check out the GitHub Repo: https://github.com/mrtemroztrk/organoid-identifier
-
-
-for beta testing, use:
+### Option 2: Beta testing
 
 ```bash
-pip install -i https://test.pypi.org/simple/ organoid-identifier==0.4.4 
+pip install -i https://test.pypi.org/simple/ organoid-identifier==0.4.5
 ```
 
+### Option 3: Build from source
 
+```bash
+git clone https://github.com/mrtemroztrk/organoid-identifier
+cd organoid-identifier
+pip install .
+```
 
+> A C compiler is only needed for the *source build*. The normal `pip install`
+> gives you a ready-to-use binary — no compiler required.
 
-# License
+---
 
-Distributed under the MIT License. See LICENSE for more information.
+## Quick start (30 seconds)
+
+```python
+import organoid_identifier as oi
+
+# Pick any TIFF file on your computer
+oi.inspect("my_image.tif")
+```
+
+That's it! You will see a report like this:
+
+```
+┌───────────────────────────────────────────────────────┐
+│              TIFF FILE INSPECTION REPORT              │
+├───────────────────────────────────────────────────────┤
+│  • File Path         : my_image.tif                   │
+│  • Status            : VALID TIFF                     │
+│  • Byte Order        : Little-Endian (II)             │
+│  • Magic Number      : 42                             │
+│  • First IFD Offset  : 11297914                 bytes │
+└───────────────────────────────────────────────────────┘
+```
+
+---
+
+## Try it with the sample data
+
+This repository includes **6 real microscopy TIFF files** in the
+[`example_data/`](example_data/) folder. They are organoid overlay images, so you
+can test the library immediately without hunting for files.
+
+```python
+import organoid_identifier as oi
+
+sample = "example_data/Overlay_BK52_WT_BGR.tif"
+
+oi.inspect(sample)       # file-level info
+oi.dimensions(sample)    # width, height, bit depth
+oi.format_info(sample)   # channels, color space, compression
+```
+
+Real output from the sample data:
+
+```
+┌───────────────────────────────────────────────────────┐
+│               TIFF IMAGE DIMENSIONS REPORT            │
+├───────────────────────────────────────────────────────┤
+│  • Width  (Pixels)   : 2323                           │
+│  • Height (Pixels)   : 2253                           │
+│  • Bits Per Sample   : 8                              │
+└───────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────┐
+│               TIFF FORMAT & COLOR REPORT              │
+├───────────────────────────────────────────────────────┤
+│  • Channels (Samples): 3                              │
+│  • Color Space       : RGB Color                      │
+│  • Compression       : LZW Compression                │
+└───────────────────────────────────────────────────────┘
+```
+
+> 📚 Want the full details on the sample files and what they mean?
+> See [Sample Data Guide](docs/sample-data.md).
+
+---
+
+## API at a glance
+
+| Function | What it does | Returns |
+|---|---|---|
+| `oi.inspect(path)` | TIFF file validation + header info | prints report |
+| `oi.dimensions(path)` | Width, height, bits per sample | prints report |
+| `oi.format_info(path)` | Channels, color space, compression | prints report |
+| `oi.read_header(path)` | Same as `inspect`, but returns the report as a string | `str` |
+| `oi.read_tags(path)` | Same as `dimensions`, but returns the report as a string | `str` |
+| `oi.read_format(path)` | Same as `format_info`, but returns the report as a string | `str` |
+
+The `read_*` variants are useful if you want to save or process the report
+yourself instead of printing it.
+
+---
+
+## How it works (no math, promise)
+
+A TIFF file starts with a small **header** (byte order + magic number), followed by
+an **IFD** — a table of **tags** that describe the image (width, height, color, …).
+Organoid Identifier reads only this metadata, never the pixel data itself. That is
+why it is so fast and lightweight. See [Architecture](docs/architecture.md) for details.
+
+---
+
+## Documentation
+
+Full documentation is available at: **https://mrtemroztrk.github.io/organoid-identifier**
+
+- [Getting Started](docs/index.md)
+- [API Reference](docs/api.md)
+- [Sample Data Guide](docs/sample-data.md)
+- [Architecture](docs/architecture.md)
+
+---
+
+## Project structure
+
+```
+organoid-identifier/
+├── python/organoid_identifier/   # Python package (public API)
+├── src/                          # Pure C engine (TIFF reader)
+│   └── tiff_reader/
+│       ├── tiff_header/          # Header & validation
+│       ├── tiff_tags/            # Width / height / bit depth
+│       └── tiff_format/          # Color space / channels / compression
+├── example_data/                 # 6 sample organoid TIFF images
+├── tests/                        # Usage examples & tests
+└── docs/                         # This documentation
+```
+
+---
+
+## License
+
+Distributed under the MIT License.
 
 Developed with ❤️ by Murat Emre Öztürk.
