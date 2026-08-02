@@ -7,19 +7,22 @@ c_module = Extension(
         'src/tiff_reader/tiff_header/tiff_header.c',
         'src/tiff_reader/tiff_header/tiff_header_bridge.c',
         'src/tiff_reader/tiff_tags/tiff_tags.c',
-        'src/tiff_reader/tiff_tags/tiff_tags_bridge.c'
+        'src/tiff_reader/tiff_tags/tiff_tags_bridge.c',
+        'src/tiff_reader/tiff_format/tiff_format.c',        # YENİ
+        'src/tiff_reader/tiff_format/tiff_format_bridge.c' # YENİ
     ],
     include_dirs=[
         'src',
         'src/tiff_reader/tiff_header',
-        'src/tiff_reader/tiff_tags'
+        'src/tiff_reader/tiff_tags',
+        'src/tiff_reader/tiff_format'                     # YENİ
     ],
     extra_compile_args=['-O3', '-std=c99']
 )
 
 setup(
     name='organoid_identifier',
-    version='0.3.0',
+    version='0.4.0', # Yeni minör sürüm
     description='High-performance zero-dependency C-powered Organoid Identifier',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
