@@ -35,3 +35,11 @@ for beta testing, use:
 pip install -i https://test.pypi.org/simple/ organoid-identifier==0.2.3 
 ```
 
+
+
+
+# License
+
+Distributed under the MIT License. See LICENSE for more information.
+
+Developed with ❤️ by Murat Emre Öztürk.
