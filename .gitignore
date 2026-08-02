@@ -1,0 +1,37 @@
+# Environment & Secret files
+.env
+.pypirc
+
+# Virtual Environments
+.venv/
+venv/
+
+# C Build & Extension artifacts
+*.o
+*.so
+*.pyd
+*.dll
+*.dylib
+build/
+dist/
+*.egg-info/
+wheelhouse/
+wheel_dist/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# IDEs
+.vscode/
+.idea/
+
+.env
+.pypirc
+.venv/
+build/
+dist/
+*.egg-info/
+wheelhouse/
+wheel_dist/
+__pycache__/
