@@ -22,7 +22,7 @@ c_module = Extension(
 
 setup(
     name='organoid_identifier',
-    version='0.4.0', # Yeni minör sürüm
+    version='0.4.1', # Yeni minör sürüm
     description='High-performance zero-dependency C-powered Organoid Identifier',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
