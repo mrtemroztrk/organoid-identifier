@@ -1,6 +1,6 @@
 # Organoid Identifier 
 
-[![PyPI version](https://img.shields.io/badge/version-0.4.3-blue.svg)](https://test.pypi.org/project/organoid-identifier/)
+[![PyPI version](https://img.shields.io/badge/version-0.4.4-blue.svg)](https://test.pypi.org/project/organoid-identifier/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-brightgreen.svg)](https://www.python.org/)
 [![Build Status](https://img.shields.io/badge/build-passing-success.svg)](#)
@@ -32,7 +32,7 @@ For more information, check out the GitHub Repo: https://github.com/mrtemroztrk/
 for beta testing, use:
 
 ```bash
-pip install -i https://test.pypi.org/simple/ organoid-identifier==0.4.3 
+pip install -i https://test.pypi.org/simple/ organoid-identifier==0.4.4 
 ```
 
 
