@@ -1,6 +1,6 @@
 # Organoid Identifier
 
-[![PyPI version](https://img.shields.io/badge/version-0.4.5-blue.svg)](https://test.pypi.org/project/organoid-identifier/)
+[![PyPI version](https://img.shields.io/badge/version-0.4.6-blue.svg)](https://test.pypi.org/project/organoid-identifier/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-brightgreen.svg)](https://www.python.org/)
 [![Build Status](https://img.shields.io/badge/build-passing-success.svg)](#)
@@ -43,7 +43,7 @@ pip install organoid-identifier
 ### Option 2: Beta testing
 
 ```bash
-pip install -i https://test.pypi.org/simple/ organoid-identifier==0.4.5
+pip install -i https://test.pypi.org/simple/ organoid-identifier==0.4.6
 ```
 
 ### Option 3: Build from source
@@ -132,9 +132,15 @@ Real output from the sample data:
 | `oi.inspect(path)` | TIFF file validation + header info | prints report |
 | `oi.dimensions(path)` | Width, height, bits per sample | prints report |
 | `oi.format_info(path)` | Channels, color space, compression | prints report |
-| `oi.read_header(path)` | Same as `inspect`, but returns the report as a string | `str` |
-| `oi.read_tags(path)` | Same as `dimensions`, but returns the report as a string | `str` |
-| `oi.read_format(path)` | Same as `format_info`, but returns the report as a string | `str` |
+| `oi.strip_info(path)` | Strip offset and raw pixel payload size | prints report |
+| `oi.bits_info(path)` | Bit depth and data format type | prints report |
+| `oi.show(path)` | Native OS window viewer for organoid images | opens window |
+| `oi.read_header(path)` | Same as `inspect`, but returns report as a string | `str` |
+| `oi.read_tags(path)` | Same as `dimensions`, but returns report as a string | `str` |
+| `oi.read_format(path)` | Same as `format_info`, but returns report as a string | `str` |
+| `oi.read_strip(path)` | Same as `strip_info`, but returns report as a string | `str` |
+| `oi.read_bits(path)` | Same as `bits_info`, but returns report as a string | `str` |
+| `oi.read_pixels(path)` | Extracts raw pixel payload and dimensions | `dict` |
 
 The `read_*` variants are useful if you want to save or process the report
 yourself instead of printing it.
@@ -145,8 +151,7 @@ yourself instead of printing it.
 
 A TIFF file starts with a small **header** (byte order + magic number), followed by
 an **IFD** — a table of **tags** that describe the image (width, height, color, …).
-Organoid Identifier reads only this metadata, never the pixel data itself. That is
-why it is so fast and lightweight. See [Architecture](docs/architecture.md) for details.
+Organoid Identifier reads this metadata instantly with its native C engine. See [Architecture](docs/architecture.md) for details.
 
 ---
 
@@ -170,10 +175,13 @@ organoid-identifier/
 │   └── tiff_reader/
 │       ├── tiff_header/          # Header & validation
 │       ├── tiff_tags/            # Width / height / bit depth
-│       └── tiff_format/          # Color space / channels / compression
+│       ├── tiff_format/          # Color space / channels / compression
+│       ├── tiff_strip/           # Strip offsets & byte counts
+│       ├── tiff_bits/            # Bit depth & data representation
+│       └── tiff_pixels/          # Raw pixel extraction
 ├── example_data/                 # 6 sample organoid TIFF images
 ├── tests/                        # Usage examples & tests
-└── docs/                         # This documentation
+└── docs/                         # Documentation
 ```
 
 ---

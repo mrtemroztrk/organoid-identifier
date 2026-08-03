@@ -7,7 +7,7 @@ and actual output.
 
 ## Printing functions
 
-These three functions **print** a nicely formatted report to your terminal.
+These functions **print** a nicely formatted report to your terminal.
 
 ### `inspect(file_path)`
 
@@ -109,16 +109,90 @@ oi.format_info("example_data/Overlay_BK52_WT_BGR.tif")
 
 ---
 
+### `strip_info(file_path)`
+
+Extracts raw pixel data offset (address) and total byte count from TIFF strip tags.
+
+| Field | Meaning |
+|---|---|
+| **Strip Offset** | Byte position where the raw image payload starts |
+| **Raw Pixel Data** | Total size of the image payload in bytes |
+
+**Example**
+
+```python
+import organoid_identifier as oi
+
+oi.strip_info("example_data/Overlay_BK52_WT_BGR.tif")
+```
+
+**Output**
+
+```
+┌───────────────────────────────────────────────────────┐
+│              TIFF STRIP & PIXEL LOCATION              │
+├───────────────────────────────────────────────────────┤
+│  • Strip Offset      : 11298118   bytes (Address) │
+│  • Raw Pixel Data    : 11307130   bytes (Length)  │
+└───────────────────────────────────────────────────────┘
+```
+
+---
+
+### `bits_info(file_path)`
+
+Shows bit depth per sample and numeric representation data type.
+
+| Field | Meaning |
+|---|---|
+| **Bits Per Sample** | Bits per channel (e.g. 8 bits, 16 bits) |
+| **Data Format** | Data representation type (e.g. `Unsigned Integer`, `Signed Integer`, `Floating Point`) |
+
+**Example**
+
+```python
+import organoid_identifier as oi
+
+oi.bits_info("example_data/Overlay_BK52_WT_BGR.tif")
+```
+
+**Output**
+
+```
+┌───────────────────────────────────────────────────────┐
+│             TIFF BIT DEPTH & DATA TYPE                │
+├───────────────────────────────────────────────────────┤
+│  • Bits Per Sample   : 8  bits                      │
+│  • Data Format       : Unsigned Integer          │
+└───────────────────────────────────────────────────────┘
+```
+
+---
+
+## Native Image Viewer
+
+### `show(file_path)`
+
+Universal, zero-dependency native OS window viewer. Converts raw image payload directly into standard 24-bit BMP in memory and opens it using the default image viewer of your system (`xdg-open` on Linux, `open` on macOS, `os.startfile` on Windows).
+
+```python
+import organoid_identifier as oi
+
+oi.show("example_data/Overlay_BK52_WT_BGR.tif")
+```
+
+**Output**
+
+```
+[+] Organoid görseli hazırlandı (2323x2253 px, BMP)
+[+] Sistem penceresinde açılıyor...
+```
+
+---
+
 ## Return-value functions
 
-The next three functions do **exactly the same work** as the ones above, but
-they **return the report as a string** instead of printing it.
-
-This is useful when you want to:
-
-- Save the report to a file
-- Send it somewhere (email, log, database)
-- Keep your terminal clean
+These functions do the work in C and **return data structures or formatted report strings** instead of printing.
 
 ### `read_header(file_path)` → `str`
 
@@ -136,23 +210,41 @@ with open("report.txt", "w") as f:
 
 Same report as `dimensions()`, returned as a string.
 
-```python
-import organoid_identifier as oi
-
-report = oi.read_tags("example_data/Overlay_BK52_WT_BGR.tif")
-print(report.upper())  # or do anything else with it
-```
-
 ### `read_format(file_path)` → `str`
 
 Same report as `format_info()`, returned as a string.
+
+### `read_strip(file_path)` → `str`
+
+Same report as `strip_info()`, returned as a string.
+
+### `read_bits(file_path)` → `str`
+
+Same report as `bits_info()`, returned as a string.
+
+### `read_pixels(file_path)` → `dict`
+
+Extracts raw pixel bytes and dimensions directly into a Python dictionary.
+
+| Key | Type | Description |
+|---|---|---|
+| `width` | `int` | Image width in pixels |
+| `height` | `int` | Image height in pixels |
+| `channels` | `int` | Number of color channels |
+| `raw_bytes` | `bytes` | Raw uncompressed image pixel payload |
+
+```python
+import organoid_identifier as oi
+
+data = oi.read_pixels("example_data/Overlay_BK52_WT_BGR.tif")
+print(data["width"], data["height"], len(data["raw_bytes"]))
+```
 
 ---
 
 ## Error handling
 
-If the file does not exist or is not a valid TIFF, the functions raise a
-**`ValueError`**:
+If the file does not exist or is not a valid TIFF, the functions raise a **`ValueError`**:
 
 ```python
 import organoid_identifier as oi
@@ -181,22 +273,4 @@ for file in sorted(glob.glob("example_data/*.tif")):
         oi.format_info(file)
     except ValueError as e:
         print(f"Skipped {file}: {e}")
-```
-
-
-### `strip_info(file_path)`
-
-Extracts raw pixel data offset (address) and total byte count from TIFF strip tags.
-
-| Field | Meaning |
-|---|---|
-| **Strip Offset** | Byte position where the raw image data starts |
-| **Raw Pixel Data** | Total size of the image payload in bytes |
-
-**Example**
-
-```python
-import organoid_identifier as oi
-
-oi.strip_info("example_data/Overlay_BK52_WT_BGR.tif")
 ```

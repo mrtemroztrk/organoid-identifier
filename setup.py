@@ -1,12 +1,11 @@
 import sys
 from setuptools import setup, Extension, find_packages
 
-# İşletim sistemine göre derleme parametrelerini ayarla
 extra_compile_args = []
 if sys.platform == "win32":
-    extra_compile_args = ["/O2", "/std:c11"] # Windows MSVC için derleme bayrakları
+    extra_compile_args = ["/O2", "/std:c11"]
 else:
-    extra_compile_args = ["-O3", "-std=c99"] # Linux ve macOS için derleme bayrakları
+    extra_compile_args = ["-O3", "-std=c99"]
 
 c_module = Extension(
     'organoid_identifier._core',
@@ -19,21 +18,27 @@ c_module = Extension(
         'src/tiff_reader/tiff_format/tiff_format.c',
         'src/tiff_reader/tiff_format/tiff_format_bridge.c',
         'src/tiff_reader/tiff_strip/tiff_strip.c',        
-        'src/tiff_reader/tiff_strip/tiff_strip_bridge.c'  
+        'src/tiff_reader/tiff_strip/tiff_strip_bridge.c',
+        'src/tiff_reader/tiff_bits/tiff_bits.c',
+        'src/tiff_reader/tiff_bits/tiff_bits_bridge.c',
+        'src/tiff_reader/tiff_pixels/tiff_pixels.c',
+        'src/tiff_reader/tiff_pixels/tiff_pixels_bridge.c'
     ],
     include_dirs=[
         'src',
         'src/tiff_reader/tiff_header',
         'src/tiff_reader/tiff_tags',
         'src/tiff_reader/tiff_format',
-        'src/tiff_reader/tiff_strip'                      
+        'src/tiff_reader/tiff_strip',
+        'src/tiff_reader/tiff_bits',
+        'src/tiff_reader/tiff_pixels'
     ],
     extra_compile_args=extra_compile_args
 )
 
 setup(
     name='organoid_identifier',
-    version='0.4.5',
+    version='0.4.6',
     description='High-performance zero-dependency C-powered Organoid Identifier',
     long_description=open('README.md', encoding='utf-8').read(),
     long_description_content_type='text/markdown',
@@ -42,16 +47,4 @@ setup(
     package_dir={'': 'python'},
     ext_modules=[c_module],
     python_requires='>=3.8',
-    classifiers=[
-        'Development Status :: 4 - Beta',
-        'Intended Audience :: Science/Research',
-        'Topic :: Scientific/Engineering :: Bio-Informatics',
-        'Topic :: Scientific/Engineering :: Image Processing',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: C',
-        'Programming Language :: Python :: 3',
-        'Operating System :: POSIX :: Linux',
-        'Operating System :: Microsoft :: Windows',
-        'Operating System :: MacOS',
-    ],
 )
