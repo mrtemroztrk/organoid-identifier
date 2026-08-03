@@ -1,0 +1,1638 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="High-performance zero-dependency C-powered Organoid Identifier">
+      
+      
+        <meta name="author" content="Murat Emre Öztürk">
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../sample-data/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>API Reference - Organoid Identifier</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Organoid Identifier" class="md-header__button md-logo" aria-label="Organoid Identifier" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Organoid Identifier
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  API Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../sample-data/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Sample Data
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Organoid Identifier" class="md-nav__button md-logo" aria-label="Organoid Identifier" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Organoid Identifier
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#printing-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Printing functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Printing functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inspectfile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inspect(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dimensionsfile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dimensions(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#format_infofile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        format_info(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strip_infofile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strip_info(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bits_infofile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bits_info(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#native-image-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Image Viewer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Native Image Viewer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#showfile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        show(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#return-value-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return-value functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Return-value functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read_headerfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_header(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_tagsfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_tags(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_formatfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_format(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_stripfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_strip(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_bitsfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_bits(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_pixelsfile_path-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_pixels(file_path) → dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-management-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Management &amp; Cache
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Management &amp; Cache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download_modelmodel_namecyto3-forcefalse-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        download_model(model_name="cyto3", force=False) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_local_models-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_local_models() → list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove_modelmodel_namecyto3-bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove_model(model_name="cyto3") → bool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear_models-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        clear_models() → None
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#organoid-morphometry-signal-intensity-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organoid Morphometry &amp; Signal Intensity Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Organoid Morphometry &amp; Signal Intensity Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#calculate_metricsmask_bytes-width-height-image_bytesnone-channels1-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        calculate_metrics(mask_bytes, width, height, image_bytes=None, channels=1) → dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-object-segmentation-shaded-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Object Segmentation &amp; Shaded Visualization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Object Segmentation &amp; Shaded Visualization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#segment_infofile_path-min_size50-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        segment_info(file_path, min_size=50) → list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_segmentationfile_path-min_size50-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        show_segmentation(file_path, min_size=50) → None
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segmentfile_path-min_size50-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        segment(file_path, min_size=50) → list
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sample Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#printing-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Printing functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Printing functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inspectfile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        inspect(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dimensionsfile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dimensions(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#format_infofile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        format_info(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strip_infofile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strip_info(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bits_infofile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        bits_info(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#native-image-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native Image Viewer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Native Image Viewer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#showfile_path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        show(file_path)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#return-value-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return-value functions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Return-value functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#read_headerfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_header(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_tagsfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_tags(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_formatfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_format(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_stripfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_strip(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_bitsfile_path-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_bits(file_path) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#read_pixelsfile_path-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        read_pixels(file_path) → dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#model-management-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model Management &amp; Cache
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Model Management &amp; Cache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download_modelmodel_namecyto3-forcefalse-str" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        download_model(model_name="cyto3", force=False) → str
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#list_local_models-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        list_local_models() → list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove_modelmodel_namecyto3-bool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        remove_model(model_name="cyto3") → bool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clear_models-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        clear_models() → None
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#organoid-morphometry-signal-intensity-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organoid Morphometry &amp; Signal Intensity Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Organoid Morphometry &amp; Signal Intensity Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#calculate_metricsmask_bytes-width-height-image_bytesnone-channels1-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        calculate_metrics(mask_bytes, width, height, image_bytes=None, channels=1) → dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-object-segmentation-shaded-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Object Segmentation &amp; Shaded Visualization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Multi-Object Segmentation &amp; Shaded Visualization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#segment_infofile_path-min_size50-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        segment_info(file_path, min_size=50) → list
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#show_segmentationfile_path-min_size50-none" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        show_segmentation(file_path, min_size=50) → None
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#segmentfile_path-min_size50-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        segment(file_path, min_size=50) → list
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="api-reference">API Reference</h1>
+<p>This page explains every function of <code>organoid_identifier</code>, with real examples
+and actual output.</p>
+<hr />
+<h2 id="printing-functions">Printing functions</h2>
+<p>These functions <strong>print</strong> a nicely formatted report to your terminal.</p>
+<h3 id="inspectfile_path"><code>inspect(file_path)</code></h3>
+<p>Checks whether the file is a valid TIFF and shows basic header information.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>File Path</strong></td>
+<td>The file you gave us</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td><code>VALID TIFF</code> or an error</td>
+</tr>
+<tr>
+<td><strong>Byte Order</strong></td>
+<td>How bytes are stored: <code>Little-Endian (II)</code> or <code>Big-Endian (MM)</code></td>
+</tr>
+<tr>
+<td><strong>Magic Number</strong></td>
+<td>TIFF identifier; always <code>42</code> for valid files</td>
+</tr>
+<tr>
+<td><strong>First IFD Offset</strong></td>
+<td>Byte position of the tag table inside the file</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+oi.inspect(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code>┌───────────────────────────────────────────────────────┐
+│              TIFF FILE INSPECTION REPORT              │
+├───────────────────────────────────────────────────────┤
+│  • File Path         : example_data/Overlay_BK52_WT_BGR.tif │
+│  • Status            : VALID TIFF                     │
+│  • Byte Order        : Little-Endian (II)             │
+│  • Magic Number      : 42                             │
+│  • First IFD Offset  : 11297914                 bytes │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="dimensionsfile_path"><code>dimensions(file_path)</code></h3>
+<p>Shows the size and color depth of the image.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Width (Pixels)</strong></td>
+<td>Image width in pixels</td>
+</tr>
+<tr>
+<td><strong>Height (Pixels)</strong></td>
+<td>Image height in pixels</td>
+</tr>
+<tr>
+<td><strong>Bits Per Sample</strong></td>
+<td>Bits per color channel (8 = standard, 16 = high depth)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+oi.dimensions(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code>┌───────────────────────────────────────────────────────┐
+│               TIFF IMAGE DIMENSIONS REPORT            │
+├───────────────────────────────────────────────────────┤
+│  • Width  (Pixels)   : 2323                           │
+│  • Height (Pixels)   : 2253                           │
+│  • Bits Per Sample   : 8                              │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="format_infofile_path"><code>format_info(file_path)</code></h3>
+<p>Shows the color model, channel count and compression of the image.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Channels (Samples)</strong></td>
+<td>Number of color channels (1 = grayscale, 3 = RGB)</td>
+</tr>
+<tr>
+<td><strong>Color Space</strong></td>
+<td><code>RGB Color</code>, <code>Grayscale / Monochromatic</code>, or <code>Unknown</code></td>
+</tr>
+<tr>
+<td><strong>Compression</strong></td>
+<td><code>Uncompressed</code>, <code>LZW Compression</code>, or <code>Unknown</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+oi.format_info(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code>┌───────────────────────────────────────────────────────┐
+│               TIFF FORMAT &amp; COLOR REPORT              │
+├───────────────────────────────────────────────────────┤
+│  • Channels (Samples): 3                              │
+│  • Color Space       : RGB Color                      │
+│  • Compression       : LZW Compression                │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="strip_infofile_path"><code>strip_info(file_path)</code></h3>
+<p>Extracts raw pixel data offset (address) and total byte count from TIFF strip tags.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Strip Offset</strong></td>
+<td>Byte position where the raw image payload starts</td>
+</tr>
+<tr>
+<td><strong>Raw Pixel Data</strong></td>
+<td>Total size of the image payload in bytes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+oi.strip_info(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code>┌───────────────────────────────────────────────────────┐
+│              TIFF STRIP &amp; PIXEL LOCATION              │
+├───────────────────────────────────────────────────────┤
+│  • Strip Offset      : 11298118   bytes (Address) │
+│  • Raw Pixel Data    : 11307130   bytes (Length)  │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h3 id="bits_infofile_path"><code>bits_info(file_path)</code></h3>
+<p>Shows bit depth per sample and numeric representation data type.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bits Per Sample</strong></td>
+<td>Bits per channel (e.g. 8 bits, 16 bits)</td>
+</tr>
+<tr>
+<td><strong>Data Format</strong></td>
+<td>Data representation type (e.g. <code>Unsigned Integer</code>, <code>Signed Integer</code>, <code>Floating Point</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example</strong></p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+oi.bits_info(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code>┌───────────────────────────────────────────────────────┐
+│             TIFF BIT DEPTH &amp; DATA TYPE                │
+├───────────────────────────────────────────────────────┤
+│  • Bits Per Sample   : 8  bits                      │
+│  • Data Format       : Unsigned Integer          │
+└───────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="native-image-viewer">Native Image Viewer</h2>
+<h3 id="showfile_path"><code>show(file_path)</code></h3>
+<p>Universal, zero-dependency native OS window viewer. Converts raw image payload directly into standard 24-bit BMP in memory and opens it using the default image viewer of your system (<code>xdg-open</code> on Linux, <code>open</code> on macOS, <code>os.startfile</code> on Windows).</p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+oi.show(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code>[+] Organoid görseli hazırlandı (2323x2253 px, BMP)
+[+] Sistem penceresinde açılıyor...
+</code></pre>
+<hr />
+<h2 id="return-value-functions">Return-value functions</h2>
+<p>These functions do the work in C and <strong>return data structures or formatted report strings</strong> instead of printing.</p>
+<h3 id="read_headerfile_path-str"><code>read_header(file_path)</code> → <code>str</code></h3>
+<p>Same report as <code>inspect()</code>, returned as a string.</p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+report = oi.read_header(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+with open(&quot;report.txt&quot;, &quot;w&quot;) as f:
+    f.write(report)
+</code></pre>
+<h3 id="read_tagsfile_path-str"><code>read_tags(file_path)</code> → <code>str</code></h3>
+<p>Same report as <code>dimensions()</code>, returned as a string.</p>
+<h3 id="read_formatfile_path-str"><code>read_format(file_path)</code> → <code>str</code></h3>
+<p>Same report as <code>format_info()</code>, returned as a string.</p>
+<h3 id="read_stripfile_path-str"><code>read_strip(file_path)</code> → <code>str</code></h3>
+<p>Same report as <code>strip_info()</code>, returned as a string.</p>
+<h3 id="read_bitsfile_path-str"><code>read_bits(file_path)</code> → <code>str</code></h3>
+<p>Same report as <code>bits_info()</code>, returned as a string.</p>
+<h3 id="read_pixelsfile_path-dict"><code>read_pixels(file_path)</code> → <code>dict</code></h3>
+<p>Extracts raw pixel bytes and dimensions directly into a Python dictionary.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>width</code></td>
+<td><code>int</code></td>
+<td>Image width in pixels</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td><code>int</code></td>
+<td>Image height in pixels</td>
+</tr>
+<tr>
+<td><code>channels</code></td>
+<td><code>int</code></td>
+<td>Number of color channels</td>
+</tr>
+<tr>
+<td><code>raw_bytes</code></td>
+<td><code>bytes</code></td>
+<td>Raw uncompressed image pixel payload</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-python">import organoid_identifier as oi
+
+data = oi.read_pixels(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+print(data[&quot;width&quot;], data[&quot;height&quot;], len(data[&quot;raw_bytes&quot;]))
+</code></pre>
+<hr />
+<h2 id="model-management-cache">Model Management &amp; Cache</h2>
+<p>Isolated CellPose model downloader and local cache manager (<code>~/.organoid_identifier/models</code>).</p>
+<h3 id="download_modelmodel_namecyto3-forcefalse-str"><code>download_model(model_name="cyto3", force=False)</code> → <code>str</code></h3>
+<p>Downloads built-in CellPose models (<code>cyto3</code>, <code>cyto2</code>, <code>nuclei</code>, <code>organoid</code>) without external dependencies. If the model already exists locally, it skips re-downloading unless <code>force=True</code>.</p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+path = oi.download_model(&quot;cyto3&quot;)
+# Update or force re-download
+path = oi.download_model(&quot;cyto3&quot;, force=True)
+</code></pre>
+<h3 id="list_local_models-list"><code>list_local_models()</code> → <code>list</code></h3>
+<p>Lists all locally installed models in the user cache directory with file sizes and absolute paths.</p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+oi.list_local_models()
+</code></pre>
+<h3 id="remove_modelmodel_namecyto3-bool"><code>remove_model(model_name="cyto3")</code> → <code>bool</code></h3>
+<p>Deletes a specific model file from the local cache.</p>
+<h3 id="clear_models-none"><code>clear_models()</code> → <code>None</code></h3>
+<p>Deletes all downloaded models to free disk space.</p>
+<hr />
+<h2 id="organoid-morphometry-signal-intensity-metrics">Organoid Morphometry &amp; Signal Intensity Metrics</h2>
+<h3 id="calculate_metricsmask_bytes-width-height-image_bytesnone-channels1-dict"><code>calculate_metrics(mask_bytes, width, height, image_bytes=None, channels=1)</code> → <code>dict</code></h3>
+<p>High-performance pixel-wise C morphometry &amp; signal intensity engine. Calculates area, perimeter, circularity, equivalent diameter, centroid, bounding box, and pixel-wise signal intensity statistics.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>area</code></td>
+<td>Organoid surface area in pixels</td>
+</tr>
+<tr>
+<td><code>perimeter</code></td>
+<td>Organoid boundary perimeter count</td>
+</tr>
+<tr>
+<td><code>circularity</code></td>
+<td>Form factor / circularity index $C = 4\pi A / P^2 \in (0, 1]$</td>
+</tr>
+<tr>
+<td><code>equivalent_diameter</code></td>
+<td>Equivalent circular diameter ($2 \sqrt{A/\pi}$)</td>
+</tr>
+<tr>
+<td><code>centroid</code></td>
+<td>Centroid coordinates $(x, y)$</td>
+</tr>
+<tr>
+<td><code>bbox</code></td>
+<td>Bounding box $(min_x, min_y, max_x, max_y)$</td>
+</tr>
+<tr>
+<td><code>mean_intensity</code></td>
+<td>Pixel-wise average signal intensity ($\bar{I}$)</td>
+</tr>
+<tr>
+<td><code>integrated_intensity</code></td>
+<td>Total integrated raw signal intensity ($\sum I_i$)</td>
+</tr>
+<tr>
+<td><code>min_intensity</code></td>
+<td>Minimum pixel signal intensity ($I_{min}$)</td>
+</tr>
+<tr>
+<td><code>max_intensity</code></td>
+<td>Maximum pixel signal intensity ($I_{max}$)</td>
+</tr>
+<tr>
+<td><code>std_intensity</code></td>
+<td>Standard deviation of signal intensity ($\sigma_I$, heterogeneity)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-python">import organoid_identifier as oi
+
+data = oi.read_pixels(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+metrics = oi.calculate_metrics(mask_bytes, width, height, data[&quot;raw_bytes&quot;], data[&quot;channels&quot;])
+
+print(metrics[&quot;mean_intensity&quot;], metrics[&quot;integrated_intensity&quot;], metrics[&quot;std_intensity&quot;])
+</code></pre>
+<hr />
+<h2 id="multi-object-segmentation-shaded-visualization">Multi-Object Segmentation &amp; Shaded Visualization</h2>
+<h3 id="segment_infofile_path-min_size50-list"><code>segment_info(file_path, min_size=50)</code> → <code>list</code></h3>
+<p>Performs zero-dependency connected-component multi-object segmentation, lists all detected organoids in a structured table, and outputs individual pixel-wise morphometry &amp; signal intensity metrics for every object.</p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+# Segment and display full organoid object table in 1 line
+objects = oi.segment_info(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;, min_size=500)
+</code></pre>
+<h3 id="show_segmentationfile_path-min_size50-none"><code>show_segmentation(file_path, min_size=50)</code> → <code>None</code></h3>
+<p>Performs segmentation and opens the original image in a native OS window with vibrant shaded/hatched contours around every detected organoid boundary.</p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+# Opens native OS window preview with shaded/hatched organoid boundaries in 1 line
+oi.show_segmentation(&quot;example_data/Overlay_BK52_WT_BGR.tif&quot;)
+</code></pre>
+<h3 id="segmentfile_path-min_size50-list"><code>segment(file_path, min_size=50)</code> → <code>list</code></h3>
+<p>Performs multi-object segmentation and returns a Python list of dictionary metrics for all detected organoid objects.</p>
+<hr />
+<h2 id="error-handling">Error handling</h2>
+<p>If the file does not exist or is not a valid TIFF, the functions raise a <strong><code>ValueError</code></strong>:</p>
+<pre><code class="language-python">import organoid_identifier as oi
+
+try:
+    oi.inspect(&quot;not_a_real_file.tif&quot;)
+except ValueError as e:
+    print(f&quot;Something went wrong: {e}&quot;)
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code>Something went wrong: Invalid TIFF header.
+</code></pre>
+<blockquote>
+<p>💡 Tip: wrap calls in a <code>try/except ValueError</code> when you loop over many files —
+so one bad file doesn't stop the whole script:</p>
+</blockquote>
+<pre><code class="language-python">import glob
+import organoid_identifier as oi
+
+for file in sorted(glob.glob(&quot;example_data/*.tif&quot;)):
+    try:
+        oi.format_info(file)
+    except ValueError as e:
+        print(f&quot;Skipped {file}: {e}&quot;)
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "navigation.tabs", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
