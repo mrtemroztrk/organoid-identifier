@@ -6,8 +6,9 @@ PyObject* py_segment_organoids(PyObject* self, PyObject* args) {
     Py_buffer view;
     int channels, width, height;
     int min_size = 50;
+    double min_circularity = 0.10;
 
-    if (!PyArg_ParseTuple(args, "y*iii|i", &view, &channels, &width, &height, &min_size)) {
+    if (!PyArg_ParseTuple(args, "y*iii|id", &view, &channels, &width, &height, &min_size, &min_circularity)) {
         return NULL;
     }
 
@@ -29,7 +30,7 @@ PyObject* py_segment_organoids(PyObject* self, PyObject* args) {
         return NULL;
     }
 
-    int object_count = segment_organoids((const uint8_t*)view.buf, channels, width, height, min_size, out_mask, out_labels);
+    int object_count = segment_organoids((const uint8_t*)view.buf, channels, width, height, min_size, min_circularity, out_mask, out_labels);
     PyBuffer_Release(&view);
 
     PyObject* mask_bytes_obj = PyBytes_FromStringAndSize((const char*)out_mask, total_pixels);

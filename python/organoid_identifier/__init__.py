@@ -75,15 +75,15 @@ def metrics_info(file_path: str) -> None:
     print(f"│  • Heterogeneity (SD): {metrics['std_intensity']:<30.2f} │")
     print(f"└───────────────────────────────────────────────────────┘\n")
 
-def segment(file_path: str, min_size: int = 50) -> list:
-    """Performs multi-object organoid segmentation and returns metric list for all objects in 1 line."""
+def segment(file_path: str, min_size: int = 100, min_circularity: float = 0.20) -> list:
+    """Performs multi-object circular organoid segmentation and returns metric list for all objects in 1 line."""
     data = read_pixels(file_path)
     width = data["width"]
     height = data["height"]
     channels = data.get("channels", 1)
     raw_bytes = data["raw_bytes"]
 
-    seg_res = segment_organoids(raw_bytes, channels, width, height, min_size)
+    seg_res = segment_organoids(raw_bytes, channels, width, height, min_size, min_circularity)
     object_count = seg_res["object_count"]
     labels_bytes = seg_res["labels_bytes"]
 
@@ -92,9 +92,9 @@ def segment(file_path: str, min_size: int = 50) -> list:
 
     return calculate_multi_metrics(labels_bytes, object_count, width, height, raw_bytes, channels)
 
-def segment_info(file_path: str, min_size: int = 50) -> list:
-    """Performs segmentation, prints multi-object report table with metrics for every object in 1 line."""
-    objects = segment(file_path, min_size)
+def segment_info(file_path: str, min_size: int = 100, min_circularity: float = 0.20) -> list:
+    """Performs circular organoid segmentation, prints multi-object report table with metrics for every object in 1 line."""
+    objects = segment(file_path, min_size, min_circularity)
     print(f"\n┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐")
     print(f"│                               ORGANOID MULTI-OBJECT SEGMENTATION REPORT                                │")
     print(f"├──────┬──────────────┬────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┤")
@@ -102,22 +102,22 @@ def segment_info(file_path: str, min_size: int = 50) -> list:
     print(f"├──────┼──────────────┼────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤")
 
     if not objects:
-        print(f"│  -   │  No organoid objects detected matching min_size >= {min_size:<51} │")
+        print(f"│  -   │  No circular organoids detected matching min_size >= {min_size:<8} & min_circularity >= {min_circularity:<6.2f} │")
     else:
         for obj in objects:
             print(f"│ #{obj['id']:<3} │ {obj['area']:<12} │ {obj['perimeter']:<10} │ {obj['circularity']:<11.4f} │ {obj['equivalent_diameter']:<11.2f} │ {obj['mean_intensity']:<11.2f} │ {obj['integrated_intensity']:<11.1f} │ {obj['std_intensity']:<11.2f} │")
     print(f"└──────┴──────────────┴────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘\n")
     return objects
 
-def save_segmentation(file_path: str, output_path: str = "segmentation_overlay.bmp", min_size: int = 50) -> str:
-    """Performs segmentation and saves highlighted organoid overlay image to disk in 1 line of code."""
+def save_segmentation(file_path: str, output_path: str = "segmentation_overlay.bmp", min_size: int = 100, min_circularity: float = 0.20) -> str:
+    """Performs circular organoid segmentation and saves highlighted overlay image with object numbers (#1, #2...) to disk in 1 line."""
     data = read_pixels(file_path)
     width = data["width"]
     height = data["height"]
     channels = data.get("channels", 1)
     raw_bytes = data["raw_bytes"]
 
-    seg_res = segment_organoids(raw_bytes, channels, width, height, min_size)
+    seg_res = segment_organoids(raw_bytes, channels, width, height, min_size, min_circularity)
     labels_bytes = seg_res["labels_bytes"]
     object_count = seg_res["object_count"]
 
@@ -129,38 +129,27 @@ def save_segmentation(file_path: str, output_path: str = "segmentation_overlay.b
     with open(dest_path, "wb") as f:
         f.write(bmp_data)
 
-    print(f"[✓] Saved highlighted segmentation image ({object_count} objects) to: {dest_path}")
+    print(f"[✓] Saved highlighted organoid segmentation image ({object_count} circular objects with #IDs) to: {dest_path}")
     return dest_path
 
-def show_segmentation(file_path: str, min_size: int = 50) -> None:
-    """Performs segmentation and opens native OS window with shaded/hatched organoid object outlines in 1 line."""
-    data = read_pixels(file_path)
-    width = data["width"]
-    height = data["height"]
-    channels = data.get("channels", 1)
-    raw_bytes = data["raw_bytes"]
+def show_segmentation(file_path: str, min_size: int = 100, min_circularity: float = 0.20) -> None:
+    """Performs circular organoid segmentation and opens native OS window with shaded outlines and #ID numbers in 1 line."""
+    dest_path = save_segmentation(file_path, os.path.join(tempfile.gettempdir(), "organoid_segmentation_preview.bmp"), min_size, min_circularity)
+    open_image(dest_path)
 
-    seg_res = segment_organoids(raw_bytes, channels, width, height, min_size)
-    labels_bytes = seg_res["labels_bytes"]
-    object_count = seg_res["object_count"]
+def open_image(image_path: str) -> None:
+    """Dedicated 1-line command to open any image file in the native system viewer."""
+    abs_path = os.path.abspath(image_path)
+    if not os.path.exists(abs_path):
+        raise FileNotFoundError(f"Image file not found: {abs_path}")
 
-    bmp_data = create_segmented_overlay_bmp(width, height, raw_bytes, channels, labels_bytes)
-
-    temp_dir = tempfile.gettempdir()
-    temp_bmp_path = os.path.join(temp_dir, "organoid_segmentation_preview.bmp")
-
-    with open(temp_bmp_path, "wb") as f:
-        f.write(bmp_data)
-
-    print(f"\n[+] Organoid segmentasyon görseli hazırlandı ({object_count} obje tespit edildi, BMP)")
-    print(f"[+] Sistem penceresinde etraflı ve taralı şekilde açılıyor...")
-
+    print(f"\n[+] Opening image in native system viewer: {abs_path}")
     if sys.platform.startswith('linux'):
-        subprocess.Popen(['xdg-open', temp_bmp_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.Popen(['xdg-open', abs_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     elif sys.platform == 'darwin':
-        subprocess.Popen(['open', temp_bmp_path])
+        subprocess.Popen(['open', abs_path])
     elif sys.platform == 'win32':
-        os.startfile(temp_bmp_path)
+        os.startfile(abs_path)
 
 def _raw_to_bmp(width: int, height: int, raw_bytes: bytes, channels: int = 3) -> bytes:
     """Zero-dependency pure Python raw pixel to standard 24-bit BMP encoder."""
@@ -242,7 +231,7 @@ def show(file_path: str) -> None:
 
 __all__ = [
     "inspect", "dimensions", "format_info", "strip_info", "bits_info", "show", "metrics_info", "analyze",
-    "segment", "segment_info", "show_segmentation", "save_segmentation",
+    "segment", "segment_info", "show_segmentation", "save_segmentation", "open_image",
     "read_header", "read_tags", "read_format", "read_strip", "read_bits", "read_pixels",
     "download_model", "list_local_models", "remove_model", "clear_models", "get_model_path",
     "calculate_metrics", "calculate_multi_metrics", "segment_organoids"

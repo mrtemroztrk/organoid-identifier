@@ -9,14 +9,15 @@ extern "C" {
 #endif
 
 /*
- * Performs zero-dependency connected-component segmentation on image pixels.
+ * Performs high-precision circular organoid segmentation.
  * image_bytes: raw uint8 image pixels
  * channels: 1 (grayscale) or 3 (RGB/BGR)
  * width, height: dimensions
- * min_size: minimum pixel area threshold for an object to be counted
- * out_mask: pre-allocated uint8 array (size = width * height) to store binary mask (0 or 255)
- * out_labels: pre-allocated int32 array (size = width * height) to store object IDs (0 = bg, 1..N = object ID)
- * Returns: total count of segmented organoid objects N
+ * min_size: minimum pixel area for an organoid object
+ * min_circularity: minimum circularity index (0.10 .. 1.00) to filter out background/irregular shapes
+ * out_mask: pre-allocated uint8 array (size = width * height) to store binary mask
+ * out_labels: pre-allocated int32 array (size = width * height) to store object IDs (1..N)
+ * Returns: total count N of valid circular organoid objects detected
  */
 int segment_organoids(
     const uint8_t* image_bytes,
@@ -24,6 +25,7 @@ int segment_organoids(
     int width,
     int height,
     int min_size,
+    double min_circularity,
     uint8_t* out_mask,
     int32_t* out_labels
 );

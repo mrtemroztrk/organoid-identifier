@@ -1,6 +1,11 @@
 #include "organoid_segmenter.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 static int compute_otsu_threshold(const uint8_t* gray, int total_pixels) {
     int histogram[256] = {0};
@@ -44,6 +49,7 @@ int segment_organoids(
     int width,
     int height,
     int min_size,
+    double min_circularity,
     uint8_t* out_mask,
     int32_t* out_labels
 ) {
@@ -67,36 +73,53 @@ int segment_organoids(
         }
     }
 
-    int threshold = compute_otsu_threshold(gray, total_pixels);
-    // Ensure threshold isn't zero
-    if (threshold < 10) threshold = 10;
+    // Border mean intensity to detect polarity (bright vs dark background)
+    double border_sum = 0.0;
+    int border_count = 0;
+    for (int x = 0; x < width; x++) {
+        border_sum += gray[x] + gray[(height - 1) * width + x];
+        border_count += 2;
+    }
+    for (int y = 0; y < height; y++) {
+        border_sum += gray[y * width] + gray[y * width + (width - 1)];
+        border_count += 2;
+    }
+    double border_mean = border_sum / (double)border_count;
+    int bright_background = (border_mean > 128.0) ? 1 : 0;
 
-    // Queue for BFS flood fill
+    int threshold = compute_otsu_threshold(gray, total_pixels);
+
+    // Temp label buffer
+    int32_t* temp_labels = (int32_t*)calloc(total_pixels, sizeof(int32_t));
     int* queue_x = (int*)malloc(total_pixels * sizeof(int));
     int* queue_y = (int*)malloc(total_pixels * sizeof(int));
 
-    if (!queue_x || !queue_y) {
+    if (!temp_labels || !queue_x || !queue_y) {
         free(gray);
+        if (temp_labels) free(temp_labels);
         if (queue_x) free(queue_x);
         if (queue_y) free(queue_y);
         return 0;
     }
 
-    int current_label = 0;
+    int raw_label = 0;
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             int idx = y * width + x;
-            if (gray[idx] >= threshold && out_labels[idx] == 0) {
-                current_label++;
+            int is_fg = bright_background ? (gray[idx] <= threshold) : (gray[idx] >= threshold);
+
+            if (is_fg && temp_labels[idx] == 0) {
+                raw_label++;
                 int head = 0, tail = 0;
-                
+
                 queue_x[tail] = x;
                 queue_y[tail] = y;
                 tail++;
-                out_labels[idx] = current_label;
+                temp_labels[idx] = raw_label;
 
-                int component_size = 0;
+                int touches_border = 0;
+                size_t component_size = 0;
 
                 while (head < tail) {
                     int cx = queue_x[head];
@@ -104,7 +127,10 @@ int segment_organoids(
                     head++;
                     component_size++;
 
-                    // 4-neighborhood
+                    if (cx == 0 || cx == width - 1 || cy == 0 || cy == height - 1) {
+                        touches_border = 1;
+                    }
+
                     int dx[] = {-1, 1, 0, 0};
                     int dy[] = {0, 0, -1, 1};
 
@@ -114,8 +140,9 @@ int segment_organoids(
 
                         if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
                             int nidx = ny * width + nx;
-                            if (gray[nidx] >= threshold && out_labels[nidx] == 0) {
-                                out_labels[nidx] = current_label;
+                            int n_fg = bright_background ? (gray[nidx] <= threshold) : (gray[nidx] >= threshold);
+                            if (n_fg && temp_labels[nidx] == 0) {
+                                temp_labels[nidx] = raw_label;
                                 queue_x[tail] = nx;
                                 queue_y[tail] = ny;
                                 tail++;
@@ -124,28 +151,71 @@ int segment_organoids(
                     }
                 }
 
-                // If component size is smaller than min_size, clear label
-                if (component_size < min_size) {
+                // Check size and border touching
+                if (touches_border || component_size < (size_t)min_size || component_size > (size_t)(total_pixels * 0.35)) {
                     for (int k = 0; k < tail; k++) {
                         int cidx = queue_y[k] * width + queue_x[k];
-                        out_labels[cidx] = 0;
+                        temp_labels[cidx] = -1; // invalid
                     }
-                    current_label--;
+                    continue;
+                }
+
+                // Calculate perimeter to evaluate circularity
+                size_t perimeter = 0;
+                for (int k = 0; k < tail; k++) {
+                    int px = queue_x[k];
+                    int py = queue_y[k];
+                    int pidx = py * width + px;
+
+                    int is_b = 0;
+                    if (px == 0 || px == width - 1 || py == 0 || py == height - 1) {
+                        is_b = 1;
+                    } else {
+                        if (temp_labels[pidx - 1] != raw_label || temp_labels[pidx + 1] != raw_label ||
+                            temp_labels[pidx - width] != raw_label || temp_labels[pidx + width] != raw_label) {
+                            is_b = 1;
+                        }
+                    }
+                    if (is_b) perimeter++;
+                }
+
+                double circularity = 0.0;
+                if (perimeter > 0) {
+                    circularity = (4.0 * M_PI * (double)component_size) / ((double)perimeter * (double)perimeter);
+                    if (circularity > 1.0) circularity = 1.0;
+                }
+
+                if (circularity < min_circularity) {
+                    for (int k = 0; k < tail; k++) {
+                        int cidx = queue_y[k] * width + queue_x[k];
+                        temp_labels[cidx] = -1; // invalid shape
+                    }
                 }
             }
         }
     }
 
-    // Populate binary mask for remaining valid objects
+    // Final relabeling of valid objects
+    int valid_count = 0;
+    int* label_map = (int*)calloc(raw_label + 1, sizeof(int));
+
     for (int i = 0; i < total_pixels; i++) {
-        if (out_labels[i] > 0) {
+        int l = temp_labels[i];
+        if (l > 0) {
+            if (label_map[l] == 0) {
+                valid_count++;
+                label_map[l] = valid_count;
+            }
+            out_labels[i] = label_map[l];
             out_mask[i] = 255;
         }
     }
 
     free(gray);
+    free(temp_labels);
     free(queue_x);
     free(queue_y);
+    free(label_map);
 
-    return current_label;
+    return valid_count;
 }
