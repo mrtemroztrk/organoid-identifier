@@ -242,6 +242,57 @@ print(data["width"], data["height"], len(data["raw_bytes"]))
 
 ---
 
+## Model Management & Cache
+
+Isolated CellPose model downloader and local cache manager (`~/.organoid_identifier/models`).
+
+### `download_model(model_name="cyto3", force=False)` → `str`
+
+Downloads built-in CellPose models (`cyto3`, `cyto2`, `nuclei`, `organoid`) without external dependencies. If the model already exists locally, it skips re-downloading unless `force=True`.
+
+```python
+import organoid_identifier as oi
+
+path = oi.download_model("cyto3")
+# Update or force re-download
+path = oi.download_model("cyto3", force=True)
+```
+
+### `list_local_models()` → `list`
+
+Lists all locally installed models in the user cache directory with file sizes and absolute paths.
+
+```python
+import organoid_identifier as oi
+
+oi.list_local_models()
+```
+
+### `remove_model(model_name="cyto3")` → `bool`
+
+Deletes a specific model file from the local cache.
+
+### `clear_models()` → `None`
+
+Deletes all downloaded models to free disk space.
+
+---
+
+## Organoid Morphometry Metrics
+
+### `calculate_metrics(mask_bytes, width, height)` → `dict`
+
+High-performance C morphometry engine. Calculates area, perimeter, circularity, equivalent diameter, centroid, and bounding box for binary mask data.
+
+```python
+import organoid_identifier as oi
+
+metrics = oi.calculate_metrics(mask_bytes, width, height)
+print(metrics["area"], metrics["circularity"], metrics["centroid"])
+```
+
+---
+
 ## Error handling
 
 If the file does not exist or is not a valid TIFF, the functions raise a **`ValueError`**:

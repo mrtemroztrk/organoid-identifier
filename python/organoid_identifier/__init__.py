@@ -9,7 +9,15 @@ from ._core import (
     read_format, 
     read_strip, 
     read_bits, 
-    read_pixels
+    read_pixels,
+    calculate_metrics
+)
+from .model_manager import (
+    download_model,
+    list_local_models,
+    remove_model,
+    clear_models,
+    get_model_path
 )
 
 def inspect(file_path: str) -> None:
@@ -114,5 +122,7 @@ def show(file_path: str) -> None:
 
 __all__ = [
     "inspect", "dimensions", "format_info", "strip_info", "bits_info", "show",
-    "read_header", "read_tags", "read_format", "read_strip", "read_bits", "read_pixels"
+    "read_header", "read_tags", "read_format", "read_strip", "read_bits", "read_pixels",
+    "download_model", "list_local_models", "remove_model", "clear_models", "get_model_path",
+    "calculate_metrics"
 ]
