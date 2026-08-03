@@ -109,6 +109,29 @@ def segment_info(file_path: str, min_size: int = 50) -> list:
     print(f"└──────┴──────────────┴────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘\n")
     return objects
 
+def save_segmentation(file_path: str, output_path: str = "segmentation_overlay.bmp", min_size: int = 50) -> str:
+    """Performs segmentation and saves highlighted organoid overlay image to disk in 1 line of code."""
+    data = read_pixels(file_path)
+    width = data["width"]
+    height = data["height"]
+    channels = data.get("channels", 1)
+    raw_bytes = data["raw_bytes"]
+
+    seg_res = segment_organoids(raw_bytes, channels, width, height, min_size)
+    labels_bytes = seg_res["labels_bytes"]
+    object_count = seg_res["object_count"]
+
+    bmp_data = create_segmented_overlay_bmp(width, height, raw_bytes, channels, labels_bytes)
+
+    dest_path = os.path.abspath(output_path)
+    os.makedirs(os.path.dirname(dest_path), exist_ok=True) if os.path.dirname(dest_path) else None
+
+    with open(dest_path, "wb") as f:
+        f.write(bmp_data)
+
+    print(f"[✓] Saved highlighted segmentation image ({object_count} objects) to: {dest_path}")
+    return dest_path
+
 def show_segmentation(file_path: str, min_size: int = 50) -> None:
     """Performs segmentation and opens native OS window with shaded/hatched organoid object outlines in 1 line."""
     data = read_pixels(file_path)
@@ -219,7 +242,7 @@ def show(file_path: str) -> None:
 
 __all__ = [
     "inspect", "dimensions", "format_info", "strip_info", "bits_info", "show", "metrics_info", "analyze",
-    "segment", "segment_info", "show_segmentation",
+    "segment", "segment_info", "show_segmentation", "save_segmentation",
     "read_header", "read_tags", "read_format", "read_strip", "read_bits", "read_pixels",
     "download_model", "list_local_models", "remove_model", "clear_models", "get_model_path",
     "calculate_metrics", "calculate_multi_metrics", "segment_organoids"

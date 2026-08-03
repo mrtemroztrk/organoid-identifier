@@ -44,7 +44,7 @@ c_module = Extension(
 
 setup(
     name='organoid_identifier',
-    version='0.4.10',
+    version='0.4.11',
     description='High-performance zero-dependency C-powered Organoid Identifier',
     long_description=open('README.md', encoding='utf-8').read(),
     long_description_content_type='text/markdown',
