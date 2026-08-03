@@ -3,12 +3,14 @@
 
 extern PyObject* py_read_tiff_header(PyObject* self, PyObject* args);
 extern PyObject* py_read_tiff_tags(PyObject* self, PyObject* args);
-extern PyObject* py_read_tiff_format(PyObject* self, PyObject* args); // YENİ
+extern PyObject* py_read_tiff_format(PyObject* self, PyObject* args);
+extern PyObject* py_read_tiff_strip(PyObject* self, PyObject* args); // Dış fonksiyon bildirimi
 
 static PyMethodDef OrganoidMethods[] = {
     {"read_header", py_read_tiff_header, METH_VARARGS, "Reads TIFF header report."},
     {"read_tags",   py_read_tiff_tags,   METH_VARARGS, "Reads TIFF dimensions report."},
-    {"read_format", py_read_tiff_format, METH_VARARGS, "Reads TIFF format and color report."}, // YENİ
+    {"read_format", py_read_tiff_format, METH_VARARGS, "Reads TIFF format report."},
+    {"read_strip",  py_read_tiff_strip,  METH_VARARGS, "Reads TIFF pixel location report."},
     {NULL, NULL, 0, NULL}
 };
 

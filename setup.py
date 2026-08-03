@@ -17,13 +17,16 @@ c_module = Extension(
         'src/tiff_reader/tiff_tags/tiff_tags.c',
         'src/tiff_reader/tiff_tags/tiff_tags_bridge.c',
         'src/tiff_reader/tiff_format/tiff_format.c',
-        'src/tiff_reader/tiff_format/tiff_format_bridge.c'
+        'src/tiff_reader/tiff_format/tiff_format_bridge.c',
+        'src/tiff_reader/tiff_strip/tiff_strip.c',        
+        'src/tiff_reader/tiff_strip/tiff_strip_bridge.c'  
     ],
     include_dirs=[
         'src',
         'src/tiff_reader/tiff_header',
         'src/tiff_reader/tiff_tags',
-        'src/tiff_reader/tiff_format'
+        'src/tiff_reader/tiff_format',
+        'src/tiff_reader/tiff_strip'                      
     ],
     extra_compile_args=extra_compile_args
 )

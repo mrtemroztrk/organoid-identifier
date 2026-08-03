@@ -182,3 +182,21 @@ for file in sorted(glob.glob("example_data/*.tif")):
     except ValueError as e:
         print(f"Skipped {file}: {e}")
 ```
+
+
+### `strip_info(file_path)`
+
+Extracts raw pixel data offset (address) and total byte count from TIFF strip tags.
+
+| Field | Meaning |
+|---|---|
+| **Strip Offset** | Byte position where the raw image data starts |
+| **Raw Pixel Data** | Total size of the image payload in bytes |
+
+**Example**
+
+```python
+import organoid_identifier as oi
+
+oi.strip_info("example_data/Overlay_BK52_WT_BGR.tif")
+```
