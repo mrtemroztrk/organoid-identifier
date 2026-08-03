@@ -28,7 +28,7 @@ def _draw_char(pixels: bytearray, width: int, height: int, row_size: int, start_
             y = start_y + bit_idx
             if (col_byte >> bit_idx) & 1:
                 if 0 <= x < width and 0 <= y < height:
-                    # Draw 1px black shadow border for readability
+                    # Draw 1px black shadow border for high contrast
                     for sy in range(-1, 2):
                         for sx in range(-1, 2):
                             nx, ny = x + sx, y + sy
@@ -61,11 +61,12 @@ def create_segmented_overlay_bmp(
     channels: int, 
     labels_bytes: bytes, 
     centroids: dict = None, 
-    outline_thickness: int = 2
+    outline_thickness: int = 1
 ) -> bytes:
     """
-    Zero-dependency pure Python overlay renderer with bold neon boundary highlights & object numbers.
-    Draws thick vibrant outlines and small object ID numbers (#1, #2, #3...) over organoids.
+    Zero-dependency pure Python contour ring renderer.
+    Draws ONLY sharp, precise contour rings matching organoid shapes (0% interior fill/shading)
+    and small object numbers (#1, #2, #3...) at centroids.
     """
     row_size = (width * 3 + 3) & ~3
     image_size = row_size * height
@@ -76,12 +77,13 @@ def create_segmented_overlay_bmp(
 
     labels = struct.unpack(f'<{width * height}i', labels_bytes)
 
+    # Distinct vibrant colors for precise contour rings (BGR format)
     colors = [
-        (0, 255, 0),     # Neon Green
+        (0, 255, 0),     # Bright Green
         (0, 165, 255),   # Bright Orange
-        (255, 255, 0),   # Bright Cyan
-        (255, 0, 255),   # Bright Magenta
-        (0, 255, 255),   # Neon Yellow
+        (255, 255, 0),   # Cyan
+        (255, 0, 255),   # Magenta
+        (0, 255, 255),   # Yellow
         (0, 128, 255),   # Deep Orange
         (255, 128, 0),   # Electric Blue
         (128, 255, 0)    # Lime
@@ -89,7 +91,6 @@ def create_segmented_overlay_bmp(
 
     out_pixels = bytearray(image_size)
 
-    # Collect object centroids if not provided
     if centroids is None:
         obj_sums = {}
         for y in range(height):
@@ -143,19 +144,21 @@ def create_segmented_overlay_bmp(
                 c_b, c_g, c_r = colors[(lbl - 1) % len(colors)]
 
                 if is_boundary:
+                    # Precise contour ring matching shape
                     out_pixels[dst_idx]     = c_b
                     out_pixels[dst_idx + 1] = c_g
                     out_pixels[dst_idx + 2] = c_r
                 else:
-                    out_pixels[dst_idx]     = int(b * 0.6 + c_b * 0.4)
-                    out_pixels[dst_idx + 1] = int(g * 0.6 + c_g * 0.4)
-                    out_pixels[dst_idx + 2] = int(r * 0.6 + c_r * 0.4)
+                    # ZERO interior fill/shading — preserve 100% original pixel color
+                    out_pixels[dst_idx]     = b
+                    out_pixels[dst_idx + 1] = g
+                    out_pixels[dst_idx + 2] = r
             else:
                 out_pixels[dst_idx]     = b
                 out_pixels[dst_idx + 1] = g
                 out_pixels[dst_idx + 2] = r
 
-    # Draw object numbers (#1, #2, #3...) over centroids
+    # Draw small object numbers (#1, #2, #3...) over centroids
     for lbl, (cx, cy) in centroids.items():
         _draw_label_text(out_pixels, width, height, row_size, cx, cy, f"#{lbl}")
 
