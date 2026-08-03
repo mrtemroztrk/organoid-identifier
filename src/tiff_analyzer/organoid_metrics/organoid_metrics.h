@@ -20,18 +20,27 @@ typedef struct {
     int min_y;
     int max_x;
     int max_y;
+    double mean_intensity;
+    double integrated_intensity;
+    double min_intensity;
+    double max_intensity;
+    double std_intensity;
 } OrganoidMetricResult;
 
 /*
- * Calculates morphological metrics for thresholded or labeled binary mask pixels.
- * width, height: dimensions of image
+ * Calculates morphological & pixel-wise signal intensity metrics for organoids.
  * mask: 1D array of uint8 (0 = background, >0 = organoid foreground)
+ * image_bytes: optional 1D array of uint8 image pixels (can be NULL)
+ * channels: 1 (grayscale) or 3 (RGB/BGR), used if image_bytes is provided
+ * width, height: image dimensions
  * out_results: allocated array to store results
  * max_labels: size of out_results buffer
  * Returns: number of detected organoids/regions
  */
 int calculate_organoid_metrics(
     const uint8_t* mask,
+    const uint8_t* image_bytes,
+    int channels,
     int width,
     int height,
     OrganoidMetricResult* out_results,

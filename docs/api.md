@@ -278,17 +278,33 @@ Deletes all downloaded models to free disk space.
 
 ---
 
-## Organoid Morphometry Metrics
+## Organoid Morphometry & Signal Intensity Metrics
 
-### `calculate_metrics(mask_bytes, width, height)` → `dict`
+### `calculate_metrics(mask_bytes, width, height, image_bytes=None, channels=1)` → `dict`
 
-High-performance C morphometry engine. Calculates area, perimeter, circularity, equivalent diameter, centroid, and bounding box for binary mask data.
+High-performance pixel-wise C morphometry & signal intensity engine. Calculates area, perimeter, circularity, equivalent diameter, centroid, bounding box, and pixel-wise signal intensity statistics.
+
+| Key | Description |
+|---|---|
+| `area` | Organoid surface area in pixels |
+| `perimeter` | Organoid boundary perimeter count |
+| `circularity` | Form factor / circularity index $C = 4\pi A / P^2 \in (0, 1]$ |
+| `equivalent_diameter` | Equivalent circular diameter ($2 \sqrt{A/\pi}$) |
+| `centroid` | Centroid coordinates $(x, y)$ |
+| `bbox` | Bounding box $(min\_x, min\_y, max\_x, max\_y)$ |
+| `mean_intensity` | Pixel-wise average signal intensity ($\bar{I}$) |
+| `integrated_intensity` | Total integrated raw signal intensity ($\sum I_i$) |
+| `min_intensity` | Minimum pixel signal intensity ($I_{min}$) |
+| `max_intensity` | Maximum pixel signal intensity ($I_{max}$) |
+| `std_intensity` | Standard deviation of signal intensity ($\sigma_I$, heterogeneity) |
 
 ```python
 import organoid_identifier as oi
 
-metrics = oi.calculate_metrics(mask_bytes, width, height)
-print(metrics["area"], metrics["circularity"], metrics["centroid"])
+data = oi.read_pixels("example_data/Overlay_BK52_WT_BGR.tif")
+metrics = oi.calculate_metrics(mask_bytes, width, height, data["raw_bytes"], data["channels"])
+
+print(metrics["mean_intensity"], metrics["integrated_intensity"], metrics["std_intensity"])
 ```
 
 ---
