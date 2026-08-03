@@ -35,6 +35,43 @@ def strip_info(file_path: str) -> None:
 def bits_info(file_path: str) -> None:
     print(read_bits(file_path))
 
+def analyze(file_path: str) -> dict:
+    """Calculates and returns organoid morphometry & pixel-wise signal metrics in 1 line."""
+    data = read_pixels(file_path)
+    width = data["width"]
+    height = data["height"]
+    channels = data.get("channels", 1)
+    raw_bytes = data["raw_bytes"]
+
+    mask = bytearray(width * height)
+    stride = channels
+    for i in range(width * height):
+        p_idx = i * stride
+        if any(raw_bytes[p_idx + c] > 0 for c in range(stride)):
+            mask[i] = 255
+
+    return calculate_metrics(bytes(mask), width, height, raw_bytes, channels)
+
+def metrics_info(file_path: str) -> None:
+    """Calculates and prints organoid morphometry and pixel-wise signal intensity report in 1 line."""
+    metrics = analyze(file_path)
+    print(f"\n┌───────────────────────────────────────────────────────┐")
+    print(f"│           ORGANOID MORPHOMETRY & INTENSITY            │")
+    print(f"├───────────────────────────────────────────────────────┤")
+    print(f"│  • File Path         : {file_path:<30} │")
+    print(f"│  • Area (Pixels)     : {metrics['area']:<30} │")
+    print(f"│  • Perimeter (Px)    : {metrics['perimeter']:<30} │")
+    print(f"│  • Circularity Index : {metrics['circularity']:<30.4f} │")
+    print(f"│  • Equiv. Diameter   : {metrics['equivalent_diameter']:<30.2f} │")
+    print(f"│  • Centroid (x, y)   : ({metrics['centroid'][0]:.1f}, {metrics['centroid'][1]:.1f}){'':<18} │")
+    print(f"├───────────────────────────────────────────────────────┤")
+    print(f"│  • Mean Intensity    : {metrics['mean_intensity']:<30.2f} │")
+    print(f"│  • Integrated Signal : {metrics['integrated_intensity']:<30.2f} │")
+    print(f"│  • Min Intensity     : {metrics['min_intensity']:<30.2f} │")
+    print(f"│  • Max Intensity     : {metrics['max_intensity']:<30.2f} │")
+    print(f"│  • Heterogeneity (SD): {metrics['std_intensity']:<30.2f} │")
+    print(f"└───────────────────────────────────────────────────────┘\n")
+
 def _raw_to_bmp(width: int, height: int, raw_bytes: bytes, channels: int = 3) -> bytes:
     """Zero-dependency pure Python raw pixel to standard 24-bit BMP encoder."""
     # BMP satır boyutu 4 baytın katı olmak zorundadır (Padding)
@@ -121,7 +158,7 @@ def show(file_path: str) -> None:
         os.startfile(temp_bmp_path)
 
 __all__ = [
-    "inspect", "dimensions", "format_info", "strip_info", "bits_info", "show",
+    "inspect", "dimensions", "format_info", "strip_info", "bits_info", "show", "metrics_info", "analyze",
     "read_header", "read_tags", "read_format", "read_strip", "read_bits", "read_pixels",
     "download_model", "list_local_models", "remove_model", "clear_models", "get_model_path",
     "calculate_metrics"
