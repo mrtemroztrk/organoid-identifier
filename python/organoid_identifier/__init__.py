@@ -138,12 +138,20 @@ def show_segmentation(file_path: str, min_size: int = 100, min_circularity: floa
     open_image(dest_path)
 
 def open_image(image_path: str) -> None:
-    """Dedicated 1-line command to open any image file in the native system viewer."""
+    """Dedicated 1-line command to display/open any image file directly on screen."""
     abs_path = os.path.abspath(image_path)
     if not os.path.exists(abs_path):
         raise FileNotFoundError(f"Image file not found: {abs_path}")
 
-    print(f"\n[+] Opening image in native system viewer: {abs_path}")
+    print(f"\n[+] Displaying image on screen: {abs_path}")
+    
+    # Try IPython/Jupyter notebook inline rendering if available
+    try:
+        from IPython.display import display, Image
+        display(Image(filename=abs_path))
+    except (ImportError, Exception):
+        pass
+
     if sys.platform.startswith('linux'):
         subprocess.Popen(['xdg-open', abs_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     elif sys.platform == 'darwin':
