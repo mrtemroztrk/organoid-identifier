@@ -309,6 +309,36 @@ print(metrics["mean_intensity"], metrics["integrated_intensity"], metrics["std_i
 
 ---
 
+## Multi-Object Segmentation & Shaded Visualization
+
+### `segment_info(file_path, min_size=50)` → `list`
+
+Performs zero-dependency connected-component multi-object segmentation, lists all detected organoids in a structured table, and outputs individual pixel-wise morphometry & signal intensity metrics for every object.
+
+```python
+import organoid_identifier as oi
+
+# Segment and display full organoid object table in 1 line
+objects = oi.segment_info("example_data/Overlay_BK52_WT_BGR.tif", min_size=500)
+```
+
+### `show_segmentation(file_path, min_size=50)` → `None`
+
+Performs segmentation and opens the original image in a native OS window with vibrant shaded/hatched contours around every detected organoid boundary.
+
+```python
+import organoid_identifier as oi
+
+# Opens native OS window preview with shaded/hatched organoid boundaries in 1 line
+oi.show_segmentation("example_data/Overlay_BK52_WT_BGR.tif")
+```
+
+### `segment(file_path, min_size=50)` → `list`
+
+Performs multi-object segmentation and returns a Python list of dictionary metrics for all detected organoid objects.
+
+---
+
 ## Error handling
 
 If the file does not exist or is not a valid TIFF, the functions raise a **`ValueError`**:

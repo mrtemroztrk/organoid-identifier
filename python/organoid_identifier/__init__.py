@@ -10,7 +10,9 @@ from ._core import (
     read_strip, 
     read_bits, 
     read_pixels,
-    calculate_metrics
+    calculate_metrics,
+    calculate_multi_metrics,
+    segment_organoids
 )
 from .model_manager import (
     download_model,
@@ -19,6 +21,7 @@ from .model_manager import (
     clear_models,
     get_model_path
 )
+from .overlay_visualizer import create_segmented_overlay_bmp
 
 def inspect(file_path: str) -> None:
     print(read_header(file_path))
@@ -36,7 +39,7 @@ def bits_info(file_path: str) -> None:
     print(read_bits(file_path))
 
 def analyze(file_path: str) -> dict:
-    """Calculates and returns organoid morphometry & pixel-wise signal metrics in 1 line."""
+    """Calculates and returns single organoid morphometry & pixel-wise signal metrics in 1 line."""
     data = read_pixels(file_path)
     width = data["width"]
     height = data["height"]
@@ -53,7 +56,7 @@ def analyze(file_path: str) -> dict:
     return calculate_metrics(bytes(mask), width, height, raw_bytes, channels)
 
 def metrics_info(file_path: str) -> None:
-    """Calculates and prints organoid morphometry and pixel-wise signal intensity report in 1 line."""
+    """Calculates and prints single organoid morphometry and pixel-wise signal intensity report in 1 line."""
     metrics = analyze(file_path)
     print(f"\n┌───────────────────────────────────────────────────────┐")
     print(f"│           ORGANOID MORPHOMETRY & INTENSITY            │")
@@ -72,20 +75,79 @@ def metrics_info(file_path: str) -> None:
     print(f"│  • Heterogeneity (SD): {metrics['std_intensity']:<30.2f} │")
     print(f"└───────────────────────────────────────────────────────┘\n")
 
+def segment(file_path: str, min_size: int = 50) -> list:
+    """Performs multi-object organoid segmentation and returns metric list for all objects in 1 line."""
+    data = read_pixels(file_path)
+    width = data["width"]
+    height = data["height"]
+    channels = data.get("channels", 1)
+    raw_bytes = data["raw_bytes"]
+
+    seg_res = segment_organoids(raw_bytes, channels, width, height, min_size)
+    object_count = seg_res["object_count"]
+    labels_bytes = seg_res["labels_bytes"]
+
+    if object_count == 0:
+        return []
+
+    return calculate_multi_metrics(labels_bytes, object_count, width, height, raw_bytes, channels)
+
+def segment_info(file_path: str, min_size: int = 50) -> list:
+    """Performs segmentation, prints multi-object report table with metrics for every object in 1 line."""
+    objects = segment(file_path, min_size)
+    print(f"\n┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐")
+    print(f"│                               ORGANOID MULTI-OBJECT SEGMENTATION REPORT                                │")
+    print(f"├──────┬──────────────┬────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┤")
+    print(f"│  ID  │ Area (Pixels)│ Perimeter  │ Circularity │ Diameter(px)│ Mean Int.   │ Total Int.  │ Hetero (SD) │")
+    print(f"├──────┼──────────────┼────────────┼─────────────┼─────────────┼─────────────┼─────────────┼─────────────┤")
+
+    if not objects:
+        print(f"│  -   │  No organoid objects detected matching min_size >= {min_size:<51} │")
+    else:
+        for obj in objects:
+            print(f"│ #{obj['id']:<3} │ {obj['area']:<12} │ {obj['perimeter']:<10} │ {obj['circularity']:<11.4f} │ {obj['equivalent_diameter']:<11.2f} │ {obj['mean_intensity']:<11.2f} │ {obj['integrated_intensity']:<11.1f} │ {obj['std_intensity']:<11.2f} │")
+    print(f"└──────┴──────────────┴────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘\n")
+    return objects
+
+def show_segmentation(file_path: str, min_size: int = 50) -> None:
+    """Performs segmentation and opens native OS window with shaded/hatched organoid object outlines in 1 line."""
+    data = read_pixels(file_path)
+    width = data["width"]
+    height = data["height"]
+    channels = data.get("channels", 1)
+    raw_bytes = data["raw_bytes"]
+
+    seg_res = segment_organoids(raw_bytes, channels, width, height, min_size)
+    labels_bytes = seg_res["labels_bytes"]
+    object_count = seg_res["object_count"]
+
+    bmp_data = create_segmented_overlay_bmp(width, height, raw_bytes, channels, labels_bytes)
+
+    temp_dir = tempfile.gettempdir()
+    temp_bmp_path = os.path.join(temp_dir, "organoid_segmentation_preview.bmp")
+
+    with open(temp_bmp_path, "wb") as f:
+        f.write(bmp_data)
+
+    print(f"\n[+] Organoid segmentasyon görseli hazırlandı ({object_count} obje tespit edildi, BMP)")
+    print(f"[+] Sistem penceresinde etraflı ve taralı şekilde açılıyor...")
+
+    if sys.platform.startswith('linux'):
+        subprocess.Popen(['xdg-open', temp_bmp_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    elif sys.platform == 'darwin':
+        subprocess.Popen(['open', temp_bmp_path])
+    elif sys.platform == 'win32':
+        os.startfile(temp_bmp_path)
+
 def _raw_to_bmp(width: int, height: int, raw_bytes: bytes, channels: int = 3) -> bytes:
     """Zero-dependency pure Python raw pixel to standard 24-bit BMP encoder."""
-    # BMP satır boyutu 4 baytın katı olmak zorundadır (Padding)
     row_size = (width * 3 + 3) & ~3
     image_size = row_size * height
     file_size = 54 + image_size
 
-    # 1. BMP File Header (14 bytes)
     header = struct.pack('<2sIHHI', b'BM', file_size, 0, 0, 54)
-
-    # 2. DIB Header / BITMAPINFOHEADER (40 bytes)
     dib = struct.pack('<IiiHHIIIIII', 40, width, -height, 1, 24, 0, image_size, 2835, 2835, 0, 0)
 
-    # 3. Piksel Verisini Hazırla
     src_stride = width * channels
     padding = b'\x00' * (row_size - width * 3)
 
@@ -137,10 +199,8 @@ def show(file_path: str) -> None:
     channels = data.get("channels", 3)
     raw_bytes = data["raw_bytes"]
 
-    # Ham piksel verisini standart 24-bit BMP formatına dönüştür
     bmp_data = _raw_to_bmp(width, height, raw_bytes, channels)
 
-    # Temp klasörüne .bmp olarak kaydediyoruz
     temp_dir = tempfile.gettempdir()
     temp_bmp_path = os.path.join(temp_dir, "organoid_preview.bmp")
 
@@ -159,7 +219,8 @@ def show(file_path: str) -> None:
 
 __all__ = [
     "inspect", "dimensions", "format_info", "strip_info", "bits_info", "show", "metrics_info", "analyze",
+    "segment", "segment_info", "show_segmentation",
     "read_header", "read_tags", "read_format", "read_strip", "read_bits", "read_pixels",
     "download_model", "list_local_models", "remove_model", "clear_models", "get_model_path",
-    "calculate_metrics"
+    "calculate_metrics", "calculate_multi_metrics", "segment_organoids"
 ]

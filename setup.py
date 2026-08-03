@@ -24,7 +24,9 @@ c_module = Extension(
         'src/tiff_reader/tiff_pixels/tiff_pixels.c',
         'src/tiff_reader/tiff_pixels/tiff_pixels_bridge.c',
         'src/tiff_analyzer/organoid_metrics/organoid_metrics.c',
-        'src/tiff_analyzer/organoid_metrics/organoid_metrics_bridge.c'
+        'src/tiff_analyzer/organoid_metrics/organoid_metrics_bridge.c',
+        'src/tiff_analyzer/organoid_segmenter/organoid_segmenter.c',
+        'src/tiff_analyzer/organoid_segmenter/organoid_segmenter_bridge.c'
     ],
     include_dirs=[
         'src',
@@ -34,14 +36,15 @@ c_module = Extension(
         'src/tiff_reader/tiff_strip',
         'src/tiff_reader/tiff_bits',
         'src/tiff_reader/tiff_pixels',
-        'src/tiff_analyzer/organoid_metrics'
+        'src/tiff_analyzer/organoid_metrics',
+        'src/tiff_analyzer/organoid_segmenter'
     ],
     extra_compile_args=extra_compile_args
 )
 
 setup(
     name='organoid_identifier',
-    version='0.4.9',
+    version='0.4.10',
     description='High-performance zero-dependency C-powered Organoid Identifier',
     long_description=open('README.md', encoding='utf-8').read(),
     long_description_content_type='text/markdown',
